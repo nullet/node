@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-
 router.get('/', function(req, res, next) {
-  res.send('junk');
+  res.setHeader('Content-Type', 'application/json');
+  res.json({ "hello": "world" });
 });
 
 module.exports = router;
