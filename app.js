@@ -5,6 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var mongoose = require('mongoose');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var kohactive = require('./routes/kohactive');
@@ -25,7 +29,33 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-// app.use('/kohactive', kohactive);
+app.use('/kohactive', kohactive);
+
+app.get('/posts/', function(req, res) {
+    res.send({ping:'these are blogs, yey'});
+});
+
+app.get('/posts/:id', function(req, res) {
+    res.send({ping:'hello this is server and I am got '+req.params.id});
+});
+
+mongoose.connect('mongodb://localhost:27017/test');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  // var blogSchema = new Schema({
+  // title:  String,
+  // author: String,
+  // body:   String,
+  // comments: [{ body: String, date: Date }],
+  // date: { type: Date, default: Date.now },
+  // hidden: Boolean,
+  // meta: {
+  //   votes: Number,
+  //   favs:  Number
+  // };
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
