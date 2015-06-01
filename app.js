@@ -8,10 +8,28 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/kohactive');
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  // var blogSchema = new Schema({
+  // title:  String,
+  // author: String,
+  // body:   String,
+  // comments: [{ body: String, date: Date }],
+  // date: { type: Date, default: Date.now },
+  // hidden: Boolean,
+  // meta: {
+  //   votes: Number,
+  //   favs:  Number
+  // };
+});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var kohactive = require('./routes/kohactive');
+var posts = require('./routes/posts')
 
 var app = express();
 
@@ -27,34 +45,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
+
 app.use('/', routes);
 app.use('/users', users);
 app.use('/kohactive', kohactive);
+app.use('/posts', posts)
 
-app.get('/posts/', function(req, res) {
-    res.send({ping:'these are blogs, yey'});
-});
+// app.get('/posts/', function(req, res) {
+//     res.send({ping:'these are blogs, yey'});
+// });
 
-app.get('/posts/:id', function(req, res) {
-    res.send({ping:'hello this is server and I am got '+req.params.id});
-});
-
-mongoose.connect('mongodb://localhost:27017/test');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-  // var blogSchema = new Schema({
-  // title:  String,
-  // author: String,
-  // body:   String,
-  // comments: [{ body: String, date: Date }],
-  // date: { type: Date, default: Date.now },
-  // hidden: Boolean,
-  // meta: {
-  //   votes: Number,
-  //   favs:  Number
-  // };
-});
+// app.get('/posts/:id', function(req, res) {
+//     res.send({ping:'hello this is server and I am got '+req.params.id});
+// });
 
 
 // catch 404 and forward to error handler
