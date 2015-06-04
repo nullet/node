@@ -11,19 +11,12 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/kohactive');
 var db = mongoose.connection;
 
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-  // var blogSchema = new Schema({
-  // title:  String,
-  // author: String,
-  // body:   String,
-  // comments: [{ body: String, date: Date }],
-  // date: { type: Date, default: Date.now },
-  // hidden: Boolean,
-  // meta: {
-  //   votes: Number,
-  //   favs:  Number
-  // };
+    console.log("Mongo working!");
 });
 
 var routes = require('./routes/index');
@@ -45,23 +38,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function(req,res,next){
-    req.db = db;
-    next();
-});
-
 app.use('/', routes);
 app.use('/users', users);
 app.use('/kohactive', kohactive);
 app.use('/posts', posts)
 
-// app.get('/posts/', function(req, res) {
-//     res.send({ping:'these are blogs, yey'});
-// });
-
-// app.get('/posts/:id', function(req, res) {
-//     res.send({ping:'hello this is server and I am got '+req.params.id});
-// });
+app.get('/posts/:id', function(req, res) {
+    // res.send({ping:'hello this is server and I am got '+ req.params.id});
+    var id = req.param("id");
+    console.log(id);
+});
 
 
 // catch 404 and forward to error handler
@@ -76,23 +62,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 
