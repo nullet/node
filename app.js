@@ -43,13 +43,6 @@ app.use('/users', users);
 app.use('/kohactive', kohactive);
 app.use('/posts', posts)
 
-app.get('/posts/:id', function(req, res) {
-    // res.send({ping:'hello this is server and I am got '+ req.params.id});
-    var id = req.param("id");
-    console.log(id);
-});
-
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
