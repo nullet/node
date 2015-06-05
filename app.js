@@ -14,7 +14,7 @@ var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000
 
 // mongoose.connect('mongodb://localhost:27017/kohactive');
 
-var mongodbUri = 'mongodb://localhost:27017/kohactive';
+var mongodbUri = 'mongodb://heroku_app37547530:fph4r437djtt61jrdeldcgjo7t@ds043952.mongolab.com:43952/heroku_app37547530';
 var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 
 mongoose.connect(mongooseUri, options);
