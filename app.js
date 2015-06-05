@@ -8,15 +8,47 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/kohactive');
-var db = mongoose.connection;
+var uriUtil = require('mongodb-uri');
+var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
+                replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
+// mongoose.connect('mongodb://localhost:27017/kohactive');
+
+var mongodbUri = 'mongodb://localhost:27017/kohactive';
+var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+
+mongoose.connect(mongooseUri, options);
+
+var db = mongoose.connection;
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-    console.log("Mongo working!");
+    var Post = require('./models/post')
+
+    var first = new Post({
+        title: 'First Post',
+        author: 'Tom',
+        body: 'I\'m just going to put some seed data here in app.js.'
+    });
+
+    var second = new Post({
+        title: 'Next Post',
+        author: 'Nullet',
+        body: 'This is much simpler than inputting data through the console.'
+    });
+
+    var third = new Post({
+        title: 'last post',
+        author: 'tom',
+        body: 'There still has to be a better way to seed data than this.'
+    });
+
+    first.save();
+    second.save();
+    third.save();
+
 });
 
 var routes = require('./routes/index');

@@ -12,6 +12,7 @@
     "express": "~4.12.4",
     "jade": "~1.9.2",
     "mongodb": "*",
+    "mongodb-uri": "~0.9.7",
     "mongoose": "*",
     "mongoose-timestamp": "*",
     "morgan": "~1.5.3",
